@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가계부</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+  <div class="container-fluid !direction !spacing p-0 m-0 px-1">
+    <div class="row m-0 me-3">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <% for (var i=1; i<=12; i++) { %>
+        <li class="nav-item">
+          <% if (mm == i) { %>
+            <a class="nav-link active" aria-current="page" href="list?mm=<%=i%>"><%= i%>월</a>
+          <% } else { %>
+          <a class="nav-link" href="list?mm=<%=i%>"><%= i%>월</a>
+          <% } %>
+        </li>
+        <% } %>
+      </ul>
+    </div>
+    <div class="row m-0">
+    <%
+      var dd = 1;
+      var date = new Date(2022, mm-1, dd);
+      var weekCnt = 0;
+      var collapseW = 1;
+      const today = new Date();
+      const dayNm = ["일","월","화","수","목","금","토"];
+      const dayCnt = [7,1,2,3,4,5,6];
+
+      if (today.getMonth() == date.getMonth()) {
+        collapseW = (today.getDate()-(dayCnt[today.getDay()]-date.getDay()+1))/7 + 1;
+      }
+    %>
+      <div class="col-md-2 p-0 accordion" id="accordionExample">
+        <%
+          do {
+            if (date.getDay() == 1 || dd == 1) {//월요일
+              weekCnt += 1;
+        %>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="heading<%=weekCnt%>">
+            <button class="accordion-button <%= (weekCnt==collapseW)?'':'collapsed' %>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%=weekCnt%>" aria-expanded="<%= (weekCnt==collapseW)?'true':'false' %>" aria-controls="collapse<%=weekCnt%>">
+              <%=weekCnt%>주
+            </button>
+          </h2>
+          <div id="collapse<%=weekCnt%>" class="accordion-collapse collapse <%= (weekCnt==collapseW)?'show':'' %>" aria-labelledby="heading<%=weekCnt%>" data-bs-parent="#accordionExample">
+            <div class="nav-pills accordion-body p-0 mt-2">
+        <%
+            }
+        %>
+              <a class="nav-link m-0 p-0 ps-2 pb-2 <%= (today.toDateString()==date.toDateString())?'active fw-semibold':'fw-normal' %>" style="font-size:14px" href='<%= "#2022"+mm.padStart(2,"0")+String(dd).padStart(2,"0") %>'><%= date.toLocaleDateString("ko-KR")+"("+dayNm[date.getDay()]+")" %></a></br>
+        <%
+            dd++;
+            date.setDate(dd);
+            if (date.getDay() == 1) {//월요일
+        %>
+            </div>
+          </div>
+        </div>
+        <%
+            }
+          } while (date.getMonth() == (mm-1))
+        %>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="col-md-10 p-0">
+        <div class="row text-center border-bottom border-2 border-secondary fw-bolder m-0 p-0 me-3">
+          <div class="col-2 border-start border-end">Date</div>
+          <div class="col-2 border-end">Contents</div>
+          <div class="col-2 border-end">Expenses</div>
+          <div class="col border-end"></div>
+          <div class="col border-end"></div>
+          <div class="col-3 border-end">Remark</div>
+          <div class="col border-end"></div>
+        </div>
+        <div data-bs-spy="scroll" data-bs-target="#accordionExample" data-bs-smooth-scroll="true" class="overflow-scroll" style="height:90vh" tabindex="0">
+          <% 
+            var dateId = "";
+            for(var i=1; i<jsonObj.length; i++) {
+              if(jsonObj[i].B.length > 0 && dateId != jsonObj[i].B.replaceAll("-","") && dateId.substring(6) != "24") {
+                dateId = jsonObj[i].B.replaceAll("-","");
+          %>
+          <div class="row border-bottom m-0" id="<%= dateId %>">
+          <%
+              } else {
+          %>
+          <div class="row border-bottom m-0">
+          <%
+              }
+          %>
+            <div class="col-sm-2 m-0 px-1 border-start border-end text-center"><%=jsonObj[i].B%></div>
+            <div class="col-sm-2 m-0 px-1 border-end"><%=jsonObj[i].C%></div>
+            <div class="col-sm-2 m-0 px-1 border-end text-end"><%=jsonObj[i].D%></div>
+            <div class="col-sm m-0 px-1 border-end"><%=jsonObj[i].E%></div>
+            <div class="col-sm m-0 px-1 border-end"><%=jsonObj[i].F%></div>
+            <div class="col-sm-3 m-0 px-1 border-end"><%=jsonObj[i].G%></div>
+            <div class="col-sm m-0 px-1 border-end"><%=jsonObj[i].H%></div>
+          </div>
+          <% } %>
+        </div> 
+      </div>
+    </div>
+  </div>
+  <script>
+   /*document.querySelectorAll('[data-bs-spy="scroll"]').forEach(el => {
+  el.addEventListener('shown.bs.tab', () => {
+    const target = el.getAttribute('data-bs-target')
+    const scrollElem = document.querySelector(`${target} [data-bs-spy="scroll"]`)
+    bootstrap.ScrollSpy.getOrCreateInstance(scrollElem).refresh()
+  })
+});*/
+console.log("여기");
+const tabElms = document.querySelectorAll('#accordionExample a');
+tabElms.forEach(tabElm => {
+  tabElm.addEventListener('click', event => {
+    // console.log(tabElm.href);
+    tabElms.forEach(tabElm1 => {
+      if (tabElm1.classList.contains("active")) {
+        tabElm1.classList.remove("active");
+        // console.log("tabElm1.href="+tabElm1.href);
+        return;
+      }
+    });
+    // const activeElm = document.querySelectorAll('#accordionExample a.active');
+    // console.log("event.target.href="+event.target.href);
+    event.target.classList.add("active");
+    //event.target // newly activated tab
+    //event.relatedTarget // previous active tab
+  });
+});
+  </script>
+  <script src="/main.js"></script>  
+</body>
+</html>

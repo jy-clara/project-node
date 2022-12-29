@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="clara">
+    <title>2022년가계부</title>    
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/main.css">
+  </head>
+  <body>
+    <%  for(var qt=1; qt<=3; qt++) { %>
+      <div class="row">
+          <%  for(var i=(qt-1)*4+1; i<=(qt-1)*4+4; i++) { %>
+          <div class="col-sm-3">
+            <div class="card" id="divMonth<%=i%>">
+              <div class="card-body">
+                <h5 class="card-title"><%=i%>월</h5>
+              </div>
+              <div class="card-header">
+                수입 : <%=jsonObj[5+(i-1)*4].O%>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">월급 : <%=jsonObj[5+(i-1)*4].D%></li>
+                <li class="list-group-item">보너스 등 : <%=jsonObj[5+(i-1)*4].E%></li>
+                <li class="list-group-item">이자,월세이익 : <%=jsonObj[5+(i-1)*4].F%></li>
+                <li class="list-group-item">기타(소득) : <%=jsonObj[5+(i-1)*4].G%></li>
+              </ul>
+              <div class="card-header">
+                지출 : <%=jsonObj[5+(i-1)*4].P%>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">저축계 : <%=jsonObj[6+(i-1)*4].C%></li>
+                <li class="list-group-item">기본지출계 : <%=jsonObj[7+(i-1)*4].C%></li>
+                <li class="list-group-item">생활비계 : <%=jsonObj[8+(i-1)*4].C%></li>
+              </ul>
+              <div class="card-body">
+                <a href="list?mm=<%=i%>" class="btn btn-primary active"><%=i%>월 상세</a>
+              </div>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      <% } %>
+      <script src="/main.js"></script>
+      <script>
+        onload = (event) => {self.location = "#divMonth12";};
+      </script>
+  </body>
+</html>
