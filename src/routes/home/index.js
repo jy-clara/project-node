@@ -3,34 +3,21 @@
 const express = require("express");
 const router = express.Router();
 
-const fs = require('fs');
+const ctrl = require("./book.ctrl");
 
-const CashBook = require('../../models/CashBook');
+router.get("/", ctrl.output.home);
+router.get("/year/:year", ctrl.output.home);
+router.get("/test", ctrl.output.test);
+router.get("/list", ctrl.output.list);
+router.get("/year/:year/mm/:mm", ctrl.output.list);
+router.get("/search/year/:year", ctrl.output.search);
+router.get("/search/year/:year/mm/:mm", ctrl.output.search);
+router.get("/syncData/year/:year", ctrl.output.syncData);
+router.get("/syncData/year/:year/mm/:mm", ctrl.output.syncData);
+router.get("/syncData", ctrl.output.syncData);
+//router.get("/search", ctrl.output.search);
 
-var bookJsonArr = [];
-bookJsonArr.length = 13;
-
-router.get('/', (req, res) => {
-  // console.log(CashBookStorage.getData("B","C"));
-  const cashBook = new CashBook(req.body); //클래스 인스턴스
-  bookJsonArr[0] = cashBook.getData("2022",bookJsonArr,0);
-
-  // res.json(response);
-  // res.render("index.html");
-  res.render("index.html",{jsonObj: bookJsonArr[0]});
-});
-
-router.get('/test', (req, res) => {
-  const cashBook = new CashBook(req.body); //클래스 인스턴스
-  res.render("test.html",{jsonObj: cashBook.getData("2022",bookJsonArr,0)});
-});
-
-router.get('/list', (req, res) => {
-    var mm = req.query.mm;
-    const cashBook = new CashBook(req.body); //클래스 인스턴스
-    bookJsonArr[mm] = cashBook.getData("2022",bookJsonArr,mm);
-
-    res.render("book/mn_list.html",{mm, jsonObj: bookJsonArr[mm]});
-  });
+router.post("/search", ctrl.process.search);
+// router.post("/save", ctrl.process.save);
 
 module.exports = router;

@@ -108,3 +108,6 @@ public/
 
 # asset files
 img/
+
+# data files
+databases/

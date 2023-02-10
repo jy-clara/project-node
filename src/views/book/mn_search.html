@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%=year%>년 <%= mm+((mm=="전체")?"":"월") %> 검색결과</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+  <div class="container-fluid m-0 px-1 sticky-top">
+    <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-success bg-opacity-75">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/year/<%=year%>">(<%=year%>년)결산Home</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarLink" aria-controls="navbarLink" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="navbarLink" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel"><%=year%>년</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <div class="navbar-nav flex-grow-1 pe-3">
+              <% for (var i=1; i<=12; i++) { %>
+                <a class="nav-link" href="/year/<%=year%>/mm/<%=i%>"><%= i%>월</a>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav> -->
+    <ul class="nav nav-tabs text-bg-success">
+      <li class="nav-item">
+        <a class="nav-link" href="/year/<%=year%>">Home</a>
+      </li>
+      <% for (var i=1; i<=12; i++) { %>
+      <li class="nav-item">
+        <a class="nav-link" href="/year/<%=year%>/mm/<%=i%>"><%= i%>월</a>
+      </li>
+      <% } %>
+    </ul>
+    <div class="row text-center text-bg-dark fw-bolder m-0 p-0 border-2 border-secondary">
+      <div class="col-2 border-end">Date</div>
+      <div class="col-2 border-end">Contents</div>
+      <div class="col-2 border-end">Expenses</div>
+      <div class="col border-end"></div>
+      <div class="col border-end"></div>
+      <div class="col-3 border-end">Remark</div>
+      <div class="col"></div>
+    </div>
+  </div>
+  <div class="container-fluid px-1 m-0">
+    <div class="row m-0 p-0" style="height:80%;" tabindex="0">
+      <% 
+      var totAmt = 0;
+      const regex = /\D|^-|^./g;
+      for(var i=0; i<jsonObj.length; i++) {
+      %>
+      <div class="row m-0 p-0">
+        <div class="col-2 m-0 px-1 border-start border-end border-bottom border-1 text-center"><%=jsonObj[i].B%></div>
+        <div class="col-2 m-0 px-1 border-end border-bottom border-1"><%=jsonObj[i].C%></div>
+        <div class="col-2 m-0 px-1 border-end border-bottom border-1 text-end"><%=jsonObj[i].D%></div>
+        <div class="col m-0 px-1 border-end border-bottom border-1"><%=jsonObj[i].E%></div>
+        <div class="col m-0 px-1 border-end border-bottom border-1"><%=jsonObj[i].F%></div>
+        <div class="col-3 m-0 px-1 border-end border-bottom border-1"><%=jsonObj[i].G%></div>
+        <div class="col m-0 px-1 border-end border-bottom border-1"><%=jsonObj[i].H%></div>
+      </div>
+      <%
+        totAmt += Number(jsonObj[i].D.replaceAll(regex,''));
+      }
+      %>
+    </div>
+  </div>
+  <div class="container-fluid px-1 m-0 sticky-bottom">
+    <div class="row text-center text-bg-info fw-bolder m-0 p-0 border-2 border-secondary">
+      <div class="col-4 border-end">합계(<%=jsonObj.length%>건)</div>
+      <div class="col-2 border-end text-end">\<%= totAmt.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",") %></div>
+      <div class="col-6"></div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success bg-opacity-75">
+      <div class="container-fluid">
+        <a class="navbar-brand">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-house-heart text-success d-inline-block align-text-top" viewBox="0 0 16 16">
+            <path d="M8 6.982C9.664 5.309 13.825 8.236 8 12 2.175 8.236 6.336 5.309 8 6.982Z"/>
+            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.707L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.646a.5.5 0 0 0 .708-.707L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
+          </svg>
+          지연's 가계부
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch" aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSearch">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item dropup">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <%=year%>년
+              </a>
+              <ul class="dropdown-menu">
+                <% 
+                const today = new Date();
+                for (var i=2010; i <= today.getFullYear(); i++) {
+                %>
+                <li><a class="dropdown-item" href="/year/<%=i%>"><%=i%>년</a></li>
+                <%
+                }
+                %>
+              </ul>
+            </li>
+          </ul>
+          <div class="d-flex" role="search">
+            <div class="input-group dropup-center dropup me-2">
+              <input class="form-control" type="search" placeholder="검색" aria-label="Search" id="iptSearch" value="<%=searchKey%>">
+              <input type="hidden" id="hdnYear" value="<%=year%>">
+              <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                옵션
+              </button>
+              <div class="dropdown-menu ms-5 p-4">
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" <%=(searchOpt=='')?'checked':''%> value="">
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    전체
+                  </label>
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" <%=(searchOpt=='C')?'checked':''%> value="C">
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    Contents
+                  </label>
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" <%=(searchOpt=='G')?'checked':''%> value="G">
+                  <label class="form-check-label" for="flexRadioDefault3">
+                    Remark
+                  </label>
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4" <%=(searchOpt=='D')?'checked':''%> value="D">
+                  <label class="form-check-label" for="flexRadioDefault4">
+                    Expenses
+                  </label>
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault5" <%=(searchOpt=='B')?'checked':''%> value="B">
+                  <label class="form-check-label" for="flexRadioDefault5">
+                    Date
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault6" <%=(searchOpt=='H')?'checked':''%> value="H">
+                  <label class="form-check-label" for="flexRadioDefault6">
+                    Contents Code
+                  </label>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-outline-success" id="btnSearch" type="button">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <script src="/main.js"></script>  
+</body>
+</html>

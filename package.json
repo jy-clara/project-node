@@ -5,11 +5,11 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./bin/www.js",
     "watch": "webpack --watch",
-    "start:dev": "webpack serve --mode development",
-    "start": "webpack serve --mode=production",
-    "server": "nodemon ./bin/www.js",
-    "build": "webpack -w",
+    "start:dev": "webpack serve --mode=development",
+    "start:webpack": "webpack serve --mode=production",
+    "build": "webpack",
     "webapp:dev": "concurrently 'npm:build' 'npm:start' "
   },
   "nodemonConfig": {
@@ -23,13 +23,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.20.1",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.2",
     "ejs": "^3.1.8",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
     "autoprefixer": "^10.4.13",
+    "babel-loader": "^9.1.2",
     "css-loader": "^6.7.3",
     "express": "^4.18.2",
     "mini-css-extract-plugin": "^2.7.2",
