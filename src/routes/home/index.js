@@ -17,7 +17,10 @@ router.get("/syncData/year/:year/mm/:mm", ctrl.output.syncData);
 router.get("/syncData", ctrl.output.syncData);
 //router.get("/search", ctrl.output.search);
 
-router.post("/search", ctrl.process.search);
+router.post("/search/year/:year", ctrl.process.search);
+router.post("/year/:year", ctrl.process.home);
+router.post("/year/:year/mm/:mm", ctrl.process.list);
+router.post("/syncData/year/:year/mm/:mm", ctrl.process.syncData);
 // router.post("/save", ctrl.process.save);
 
 module.exports = router;

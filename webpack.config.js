@@ -6,7 +6,8 @@ module.exports = {
   mode: 'development',
   devtool: 'source-map',
   entry: {
-    main: ['./src/js/main.js'],
+    index: './src/js/index.js',
+    // main: ['./src/js/main.js'],
     // main: ['./src/js/main.js', 'webpack-hot-middleware/client'],
     // hot module replacement를 위한 런타임 코드
     hot: 'webpack/hot/dev-server.js',
