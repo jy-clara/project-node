@@ -1,17 +1,17 @@
 "use strict";
 
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
 import * as lib from '../lib/lib';
 
 // Import our custom CSS
 import '../../scss/styles.scss';
 
-import {BNavTabs} from '../comp/BNavs';
-import {GridHeader, GridRow, GridColumn} from '../comp/Grid';
+import { YearContext, MonthContext } from '../Context';
+import {GridHeader, GridRow, GridColumn, GridFooter} from '../comp/Grid';
 import BOffcanvas from '../comp/BOffcanvas';
 import BAccordion from '../comp/BAccordion';
 
-const listTitles = [
+export const listTitles = [
   {id: 'B', size:'2', align: 'text-center', text:'Date'},
   {id: 'C', size:'2', text:'Contents'},
   {id: 'D', size:'2', align: ' text-end', text:'Expenses'},
@@ -21,15 +21,17 @@ const listTitles = [
   {id: 'H', text:''}
 ];
 
-export default function List({year, mm, goHome, goList, searchCnt}) {
+export default function List({goHome, goList, searchCnt, setSrchSumComp}) {
     //console.log("List",mm);
     const [gridComp, setGridComp] = useState(
     <GridRow isGrpStart={false}>
-      <GridColumn isStartCol={true} textAlign='text-center'>데이타가 없습니다.</GridColumn>
+      <GridColumn isStartCol={true} textAlign='text-center'>데이타를 조회중입니다.</GridColumn>
     </GridRow>);
     // const [datas, setDatas] = useState([]);
     const [weeks, setWeeks] = useState([{text: "", items: []}]);
     const accordionGrps = [];
+    const year = useContext(YearContext);
+    const mm = useContext(MonthContext);
 
     useEffect(() => {
       if (mm == 0) return;
@@ -38,6 +40,13 @@ export default function List({year, mm, goHome, goList, searchCnt}) {
 
       lib.postData(`/year/${year}/mm/${mm}`).then((data) => {
         // console.log("data.jsonObj",data.jsonObj); // JSON data parsed by `data.json()` call
+        if (!data.jsonObj || data.jsonObj.length == 0) {
+          setGridComp(          
+          <GridRow isGrpStart={false}>
+            <GridColumn isStartCol={true} textAlign='text-center'>데이타가 없습니다.</GridColumn>
+          </GridRow>);
+          return;
+        }
         const grps = [];
         let grpDt = lib.InvalidDt;
         //console.log("data.jsonObj.length", data.jsonObj.length);
@@ -98,6 +107,13 @@ export default function List({year, mm, goHome, goList, searchCnt}) {
         {searchTxt: document.querySelector("#iptSearch").value,
          opt: document.querySelector("[name=flexRadioDefault]:checked").value}
       ).then((data) => {
+        if (!data.jsonObj || data.jsonObj.length == 0) {
+          setGridComp(          
+          <GridRow isGrpStart={false}>
+            <GridColumn isStartCol={true} textAlign='text-center'>데이타가 없습니다.</GridColumn>
+          </GridRow>);
+          return;
+        }
         setGridComp(getGridRowComp(null, data.jsonObj));
       });
 
@@ -110,11 +126,7 @@ export default function List({year, mm, goHome, goList, searchCnt}) {
     
     return (
       <>
-        <div className="container-fluid m-0 p-0 sticky-top">
-          <BNavTabs navItems={navItems} linkFn={[goHome,goList]} />
-          <GridHeader titles={listTitles} />
-        </div>
-        <div className="container-fluid m-0 p-0" id="gridList" data-bs-spy="scroll" data-bs-target="#accordionDate" data-bs-smooth-scroll="true" tabIndex="0">
+        <div className="container-fluid position-relative m-0 p-0" id="gridList" data-bs-spy="scroll" data-bs-target="#accordionDate" data-bs-smooth-scroll="true" tabIndex="0">
           {gridComp}
         </div>
         {mm > 0 &&
@@ -156,8 +168,13 @@ export function getGridRowComp(grps, datas) {
   }
   
   const ret = [];
+  const regex = /\D|^-|^./g;
+  let totAmt = 0;
+
   for (let idx=0; idx < datas.length; idx++) {
     const jsonObj = datas[idx];
+    totAmt += Number(jsonObj.D.replaceAll(regex,''));
+
     ret.push(
       <GridRow key={`Row${idx}`} isGrpStart={false}>
         <GridColumn textSize='2' isStartCol={true} textAlign='text-center'>
@@ -172,5 +189,13 @@ export function getGridRowComp(grps, datas) {
       </GridRow>
     );
   }
+  ret.push(
+    <GridFooter key="sumFoo">
+      <div className="col-4 border-end">합계({datas.length}건)</div>
+      <div className="col-2 border-end text-end">{totAmt.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}</div>
+      <div className="col-6"></div>
+    </GridFooter>
+  );
+        
   return ret;
 }

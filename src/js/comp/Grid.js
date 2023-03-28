@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-function GridHeader({titles}) {
+export function GridHeader({titles}) {
     return (
         <div className="row text-center text-bg-dark border-2 border-secondary fw-bolder m-0 p-0">
             {titles.map((title, idx) =>
@@ -13,7 +13,7 @@ function GridHeader({titles}) {
 }
 
 
-function GridRow({isGrpStart, id, bgColor, children}) {
+export function GridRow({isGrpStart, id, bgColor, children}) {
     // console.log("Grid","Row()",`datas[${rowIdx}]`,datas[rowIdx]);
     
     if (isGrpStart) {
@@ -33,10 +33,18 @@ function GridRow({isGrpStart, id, bgColor, children}) {
     );
 }
 
-function GridColumn({textSize, textAlign, textColor, isStartCol, children}) {
+export function GridColumn({textSize, textAlign, textColor, isStartCol, children}) {
     return (
         <div className={`col-sm${textSize?"-"+textSize:""} m-0 px-1${isStartCol?" border-start":""} border-end border-1 ${textAlign} ${textColor}`}>
             {children}
+        </div>
+    );
+}
+
+export function GridFooter({children}) {
+    return (
+        <div className="row sticky-bottom text-center text-bg-info fw-bolder m-0 p-0 border-2 border-secondary">
+          {children}
         </div>
     );
 }
@@ -95,5 +103,3 @@ function GridColumn({textSize, textAlign, textColor, isStartCol, children}) {
 //         </div>
 //     );
 // }
-  
-export { GridHeader, GridRow, GridColumn };

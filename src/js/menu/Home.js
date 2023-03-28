@@ -1,16 +1,18 @@
 "use strict";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import * as lib from '../lib/lib';
 
 // Import our custom CSS
 import '../../scss/styles.scss';
 
 import {BCardListGrp2WithTopImg as BCard} from '../comp/BCardListWithImg';
+import { YearContext } from '../Context';
 
-export default function Home({year, goList}) {
+export default function Home({goList}) {
 
     const [datas, setDatas] = useState([]);
+    const year = useContext(YearContext);
 
     function onClickCardBtn(linkMM, tp) {
         console.log("onClickCardBtn", linkMM, tp);
@@ -72,7 +74,7 @@ export default function Home({year, goList}) {
     },[year]);
 
     return (
-      <>
+      <div className="container-xxl">
         {datas.length > 0 && lib.quarts.map((months, idx) =>
         <div key={"quart"+(idx+1)} className="row justify-content-center my-1 ms-1 me-0">
         {months.map((month) =>
@@ -84,6 +86,6 @@ export default function Home({year, goList}) {
         )}
         </div>
         )}
-      </>
+      </div>
     );
 }

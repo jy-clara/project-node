@@ -79,9 +79,35 @@
 // @import "~bootstrap/scss/utilities/api";
 // scss-docs-end import-stack
 
+
+:root {
+  --bd-purple: #4c0bce;
+  --bd-violet: #712cf9;
+  --bd-accent: #ffe484;
+  --bd-violet-rgb: 112.520718,44.062154,249.437846;
+  --bd-accent-rgb: 255,228,132;
+  --bd-pink-rgb: 214,51,132;
+  --bd-teal-rgb: 32,201,151;
+  --docsearch-primary-color: var(--bd-violet);
+  --docsearch-logo-color: var(--bd-violet)
+}
+
+html {
+  box-sizing: border-box;
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
 body {
   margin: 0;
 }
+
+// #root {
+//   height: 100vh;
+// }
 
 // @mixin bg-image ($bg_image_src:'202210') {
 //   background-image: url("../img/#{$bg_image_src}.jpg");
@@ -97,6 +123,13 @@ $bg-image-ids: 202201,202202,202203,202204,202205,202206,202207,202208,202209,20
     background-size: cover;
     color: $white;
   }
+}
+
+.bd-navbar {
+  padding: .25rem 0;
+  background-color: transparent;
+  background-image: linear-gradient(to bottom, rgba(var(--bd-accent-rgb), 1), rgba(var(--bd-accent-rgb), 0.95));
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15),inset 0 -1px 0 rgba(0,0,0,0.15)
 }
 
 .navbar-dark .show .offcanvas-body .nav-link {
@@ -168,3 +201,5 @@ $bg-image-ids: 202201,202202,202203,202204,202205,202206,202207,202208,202209,20
   .scroll-y-hide::-webkit-scrollbar {
     display: none;
   }
+
+  
