@@ -38,7 +38,7 @@ export default function BAccordion({id, grps}) {
                 <div id={`collapse${idx+1}`} className={`accordion-collapse collapse${grp.isActive ? " show":""}`} aria-labelledby={`heading${idx+1}`} data-bs-parent={`#${id}`}>
                     <div className="nav-pills accordion-body p-0 mt-2">
                     {grp.items.map((item,idx) => (
-                        <a key={`accordionBody${idx+1}`} className={`nav-link m-0 p-0 ps-2 pb-3 ${item.selected?'active fw-semibold':'fw-normal'}`} style={{fontSize: '14px'}} onClick={(e) => handleCollapseClick(item.id, e)}>
+                        <a key={`accordionBody${idx+1}`} className={`nav-link m-0 p-0 ps-2 pb-3 ${item.selected?'active fw-semibold':'fw-normal'}`} style={{fontSize: '14px'}} onClick={(e) => handleCollapseClick(item.id, e)} href="#">
                             {item.text}
                         </a>
                     ))}

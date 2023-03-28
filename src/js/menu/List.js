@@ -13,12 +13,12 @@ import BAccordion from '../comp/BAccordion';
 
 export const listTitles = [
   {id: 'B', size:'2', align: 'text-center', text:'Date'},
-  {id: 'C', size:'2', text:'Contents'},
+  {id: 'C', size:'2', align: '', text:'Contents'},
   {id: 'D', size:'2', align: ' text-end', text:'Expenses'},
-  {id: 'E', text:''},
-  {id: 'F', text:''},
-  {id: 'G', size:'3', text:'Remark'},
-  {id: 'H', text:''}
+  {id: 'E', align: '', text:''},
+  {id: 'F', align: '', text:''},
+  {id: 'G', size:'3', align: '', text:'Remark'},
+  {id: 'H', align: '', text:''}
 ];
 
 export default function List({goHome, goList, searchCnt, setSrchSumComp}) {
@@ -57,11 +57,11 @@ export default function List({goHome, goList, searchCnt, setSrchSumComp}) {
             // console.log("InvalidDt", data.jsonObj[idx].B);
             grpDt = new Date("9999-12-31");
             if (data.jsonObj.length <= 1) break;
-            grps.push({id: lib.yyyymmdd(grpDt), startIdx: (grps.length==0)?1:(grps[grps.length-1].endIdx), endIdx: data.jsonObj.length});
+            grps.push({id: lib.yyyymmdd(grpDt), startIdx: (grps.length==0)?1:(grps[grps.length-1].endIdx+1), endIdx: data.jsonObj.length});
             break;
           }
           if (lib.isValidDt(grpDt) && data.jsonObj[idx].C == "잔액") {
-            grps.push({id: lib.yyyymmdd(grpDt), startIdx: (grps.length==0)?1:(grps[grps.length-1].endIdx), endIdx: idx+1});
+            grps.push({id: lib.yyyymmdd(grpDt), startIdx: (grps.length==0)?1:(grps[grps.length-1].endIdx+1), endIdx: idx});
             //console.log("grps push",idx);
             grpDt = lib.InvalidDt;
           }
@@ -147,55 +147,74 @@ export default function List({goHome, goList, searchCnt, setSrchSumComp}) {
 }
 
 export function getGridRowComp(grps, datas) {
+  const ret = [];
+  let grp, jsonObj;
+  let textColor = "", bgColor = "";
+
   if (grps) {
-    return grps.map((grp, grpIdx) =>
-        <Fragment key={`RowGrp${grpIdx+1}`}> 
-        {datas.slice(grp.startIdx, grp.endIdx).map((jsonObj, idx) => (
-          <GridRow key={`Row${grp.startIdx+idx}`} isGrpStart={idx==0?true:false} bgColor={jsonObj.C=="잔액"?'bg-info':''} id={grp.id}>
-            <GridColumn textSize='2' isStartCol={true} textAlign='text-center' textColor={idx > 0?(grp.id != lib.toOnlyNumStr(jsonObj.B)?'text-danger':'text-white'):''}>
-              {jsonObj.B}
-            </GridColumn>
-            <GridColumn textSize='2' isStartCol={false}>{jsonObj.C}</GridColumn>
-            <GridColumn textSize='2' isStartCol={false} textAlign='text-end'>{jsonObj.D}</GridColumn>
-            <GridColumn isStartCol={false}>{jsonObj.E}</GridColumn>
-            <GridColumn isStartCol={false}>{jsonObj.F}</GridColumn>
-            <GridColumn textSize='3' isStartCol={false}>{jsonObj.G}</GridColumn>
-            <GridColumn isStartCol={false}>{jsonObj.H}</GridColumn>
-          </GridRow>
-        ))}
+    for (let idx=1; idx < datas.length; idx++) {
+      jsonObj = datas[idx];
+      grp = grps.find(ele => ele.startIdx <= idx && ele.endIdx >= idx);
+      // console.log(idx,grp);
+      textColor = "";
+      if (grp.startIdx < idx) {
+        textColor = grp.id != lib.toOnlyNumStr(jsonObj.B) ? 'text-danger':'text-white';
+      }
+      bgColor = "";
+      if (jsonObj.C=="잔액") {
+        bgColor = "bg-info";
+      }
+      ret.push(
+        <Fragment key={`Row${idx}`}> 
+          <div className={`col-2 m-0 px-1 border border-top-0 ${idx < grp.endIdx?'border-bottom-0':''} text-center ${textColor} ${bgColor}`} id={grp.id}>
+            {jsonObj.B}
+          </div>
+          <div className={`col-2 m-0 px-1 border-end border-bottom border-1 ${bgColor}`}>{jsonObj.C}</div>
+          <div className={`col-2 m-0 px-1 border-end border-bottom border-1 text-end ${bgColor}`}>{jsonObj.D}</div>
+          <div className={`col-1 m-0 px-1 border-end border-bottom border-1 ${bgColor}`}>{jsonObj.E}</div>
+          <div className={`col-1 m-0 px-1 border-end border-bottom border-1 ${bgColor}`}>{jsonObj.F}</div>
+          <div className={`col-3 m-0 px-1 border-end border-bottom border-1 ${bgColor}`}>{jsonObj.G}</div>
+          <div className={`col-1 m-0 px-1 border-end border-bottom border-1 ${bgColor}`}>{jsonObj.H}</div>
         </Fragment>
       );
+      if (idx == grp.endIdx) {
+        ret.push(
+          <div key={`RowHR${idx}`} className="col-12 m-0 px-1 border-bottom border-2"></div>
+        );
+      }
+    }
+
+    return <div className={`row row-cols-6 m-0`}>{ret}</div>;
   }
   
-  const ret = [];
   const regex = /\D|^-|^./g;
   let totAmt = 0;
 
   for (let idx=0; idx < datas.length; idx++) {
     const jsonObj = datas[idx];
     totAmt += Number(jsonObj.D.replaceAll(regex,''));
-
+    
     ret.push(
-      <GridRow key={`Row${idx}`} isGrpStart={false}>
-        <GridColumn textSize='2' isStartCol={true} textAlign='text-center'>
-          {jsonObj.B}
-        </GridColumn>
-        <GridColumn textSize='2' isStartCol={false}>{jsonObj.C}</GridColumn>
-        <GridColumn textSize='2' isStartCol={false} textAlign='text-end'>{jsonObj.D}</GridColumn>
-        <GridColumn isStartCol={false}>{jsonObj.E}</GridColumn>
-        <GridColumn isStartCol={false}>{jsonObj.F}</GridColumn>
-        <GridColumn textSize='3' isStartCol={false}>{jsonObj.G}</GridColumn>
-        <GridColumn isStartCol={false}>{jsonObj.H}</GridColumn>
-      </GridRow>
+      <Fragment key={`Row${idx}`}> 
+        <div className={`col-2 m-0 px-1 border border-top-0 text-center`}>{jsonObj.B}</div>
+        <div className={`col-2 m-0 px-1 border-end border-bottom border-1`}>{jsonObj.C}</div>
+        <div className={`col-2 m-0 px-1 border-end border-bottom border-1 text-end`}>{jsonObj.D}</div>
+        <div className={`col-1 m-0 px-1 border-end border-bottom border-1`}>{jsonObj.E}</div>
+        <div className={`col-1 m-0 px-1 border-end border-bottom border-1`}>{jsonObj.F}</div>
+        <div className={`col-3 m-0 px-1 border-end border-bottom border-1`}>{jsonObj.G}</div>
+        <div className={`col-1 m-0 px-1 border-end border-bottom border-1`}>{jsonObj.H}</div>
+      </Fragment>
     );
   }
-  ret.push(
+        
+  return (
+    <>
+    <div className={`row row-cols-6 m-0`}>{ret}</div>
     <GridFooter key="sumFoo">
       <div className="col-4 border-end">합계({datas.length}건)</div>
       <div className="col-2 border-end text-end">{totAmt.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",")}</div>
       <div className="col-6"></div>
     </GridFooter>
+    </>
   );
-        
-  return ret;
 }

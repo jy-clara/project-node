@@ -35,7 +35,7 @@ export function GridRow({isGrpStart, id, bgColor, children}) {
 
 export function GridColumn({textSize, textAlign, textColor, isStartCol, children}) {
     return (
-        <div className={`col-sm${textSize?"-"+textSize:""} m-0 px-1${isStartCol?" border-start":""} border-end border-1 ${textAlign} ${textColor}`}>
+        <div className={`col${textSize?"-"+textSize:""} m-0 px-1${isStartCol?" border-start":""} border-end border-1 ${textAlign} ${textColor}`}>
             {children}
         </div>
     );
