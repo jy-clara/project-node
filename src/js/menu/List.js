@@ -159,7 +159,7 @@ export function getGridRowComp(grps, datas) {
       grp = grps.find(ele => ele.startIdx <= idx && ele.endIdx >= idx);
       // console.log(idx,grp);
       textColor = "";
-      if (grp.startIdx < idx) {
+      if (grp && grp.startIdx < idx) {
         textColor = grp.id != lib.toOnlyNumStr(jsonObj.B) ? 'text-danger':'text-white';
       }
       bgColor = "";
@@ -168,7 +168,7 @@ export function getGridRowComp(grps, datas) {
       }
       ret.push(
         <Fragment key={`Row${idx}`}> 
-          <div className={`col-2 m-0 px-1 border border-top-0 ${idx < grp.endIdx?'border-bottom-0':''} text-center ${textColor} ${bgColor}`} id={grp.id}>
+          <div className={`col-2 m-0 px-1 border border-top-0 ${grp && idx < grp.endIdx?'border-bottom-0':''} text-center ${textColor} ${bgColor}`} id={grp ? grp.id : lib.toOnlyNumStr(jsonObj.B)}>
             {jsonObj.B}
           </div>
           <div className={`col-2 m-0 px-1 border-end border-bottom border-1 ${bgColor}`}>{jsonObj.C}</div>
@@ -179,7 +179,7 @@ export function getGridRowComp(grps, datas) {
           <div className={`col-1 m-0 px-1 border-end border-bottom border-1 ${bgColor}`}>{jsonObj.H}</div>
         </Fragment>
       );
-      if (idx == grp.endIdx) {
+      if (grp && idx == grp.endIdx) {
         ret.push(
           <div key={`RowHR${idx}`} className="col-12 m-0 px-1 border-bottom border-2"></div>
         );
