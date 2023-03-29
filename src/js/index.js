@@ -60,7 +60,16 @@ function App() {
       <MonthContext.Provider value={selectedMM}>
       <div className="sticky-top">
         <BNavbar dropdownLink={`${selectedYear}년`} dropdownItems={years} linkFn={[goSelectedYear,goSelectedMM]} searchFn={search}>지연's 가계부</BNavbar>
-        {(linkTp == "list" || linkTp == "search") && <GridHeader titles={listTitles} />}
+        {(linkTp == "list" || linkTp == "search") && (
+          <div className={`container-xxl ${linkTp == "list" ?'bd-layout':''}`}>
+            <aside className={`bd-top-sidebar d-none ${linkTp == "list" ?'d-lg-block':''}`}>날짜 바로가기</aside>
+            <main className="bd-main m-0 p-0">
+              <div className="bd-content">
+                <GridHeader titles={listTitles} />
+              </div>
+            </main>
+          </div>
+        )}
       </div>
       {linkTp == "home" && <Home goList={goSelectedMM} />}
       {(linkTp == "list" || linkTp == "search") && <List year={selectedYear} mm={selectedMM} goHome={goSelectedYear} goList={goSelectedMM} searchCnt={searchCnt} setSrchSumComp={setBottomComp} />}
