@@ -252,3 +252,23 @@ $bg-image-ids: 202201,202202,202203,202204,202205,202206,202207,202208,202209,20
 //       max-width:760px;
 //       margin-inline:auto}
 // }
+
+.custom-popover {
+  // --bs-popover-max-width: 200px;
+  --bs-popover-border-color: var(--bs-primary);
+  --bs-popover-header-bg: var(--bs-primary);
+  --bs-popover-header-color: var(--bs-white);
+  --bs-popover-header-padding-y: 0.25rem;
+  // --bs-popover-body-padding-x: 1rem;
+  // --bs-popover-body-padding-y: .5rem;
+}
+
+.custom-popover p {
+  margin: 0%;
+  padding: 0%;
+  width: 11.5rem;
+}
+
+.custom-popover span {
+  float: right;
+}

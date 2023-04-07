@@ -83,3 +83,14 @@ const domContainer = document.querySelector('#root');
 const root = ReactDOM.createRoot(domContainer);
 // root.render(<React.StrictMode><App /></React.StrictMode>);
 root.render(<App />);
+
+
+// --------
+// Enable popovers
+// --------
+// document.querySelectorAll('[data-bs-toggle="popover"]')
+//   .forEach(popover => {
+//     new bootstrap.Popover(popover)
+//   })
+
+// const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
